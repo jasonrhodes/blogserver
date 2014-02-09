@@ -6,27 +6,27 @@ var express = require("express")
 var port = process.argv[2] || 5000;
 
 var db = {
-	posts: new Datastore({
-			filename: "./blogdb"
-		,	autoload: true
-	})
+  posts: new Datastore({
+      filename: "./blogdb"
+    , autoload: true
+  })
 };
 
 function upsertPost(post, callback) {
 
-	if (!post._id && !post.publishDate) {
-		post.publishDate = new Date();
-	}
-	
-	db.posts.update({ _id: post._id }, post, { upsert: true }, callback);
+  if (!post._id && !post.publishDate) {
+    post.publishDate = new Date();
+  }
+  
+  db.posts.update({ _id: post._id }, post, { upsert: true }, callback);
 
 }
 
 app.use(express.bodyParser());
 
 app.use(function (req, res, next) {
-	res.type("application/json");
-	next();
+  res.type("application/json");
+  next();
 });
 
 /**
@@ -35,20 +35,20 @@ app.use(function (req, res, next) {
  */
 app.get("/posts", function (req, res) {
 
-	var page = req.params.page || 1;
-	var perPage = req.params.per_page || 20;
-	var skip = (page - 1) * perPage;
+  var page = req.params.page || 1;
+  var perPage = req.params.per_page || 20;
+  var skip = (page - 1) * perPage;
 
-	db.posts.find({}).skip(skip).limit(perPage).exec(function (err, posts) {
+  db.posts.find({}).skip(skip).limit(perPage).exec(function (err, posts) {
 
-		if (err) {
-			res.send(err);
-			return;
-		}
-		
-		res.send(200, posts);
+    if (err) {
+      res.send(err);
+      return;
+    }
+    
+    res.send(200, posts);
 
-	});
+  });
 
 });
 
@@ -58,16 +58,16 @@ app.get("/posts", function (req, res) {
  */
 app.post("/posts", function (req, res) {
 
-	upsertPost(req.body, function (err, num, post) {
+  upsertPost(req.body, function (err, num, post) {
 
-		if (err) {
-			res.send(err);
-			return;
-		}
+    if (err) {
+      res.send(err);
+      return;
+    }
 
-		res.send(201, post);
-	
-	});
+    res.send(201, post);
+  
+  });
 
 });
 
@@ -77,16 +77,16 @@ app.post("/posts", function (req, res) {
  */
 app.get("/posts/:id", function (req, res) {
 
-	db.posts.find({ _id: req.params.id }, function (err, post) {
+  db.posts.find({ _id: req.params.id }, function (err, post) {
 
-		if (err) {
-			res.send(err);
-			return;
-		}
+    if (err) {
+      res.send(err);
+      return;
+    }
 
-		res.send(200, post);
+    res.send(200, post);
 
-	});
+  });
 
 });
 
@@ -96,18 +96,18 @@ app.get("/posts/:id", function (req, res) {
  */
 app.put("/posts/:id", function (req, res) {
 
-	req.body._id = req.params.id;
+  req.body._id = req.params.id;
 
-	upsertPost(req.body, function (err, num) {
+  upsertPost(req.body, function (err, num) {
 
-		if (err) {
-			res.send(err);
-			return;
-		}
+    if (err) {
+      res.send(err);
+      return;
+    }
 
-		res.send(200, { "message": "Updated " + num + " post(s)" });
-	
-	});
+    res.send(200, { "message": "Updated " + num + " post(s)" });
+  
+  });
 
 });
 
@@ -117,17 +117,17 @@ app.put("/posts/:id", function (req, res) {
  */
 app.delete("/posts/:id", function (req, res) {
 
-	db.posts.remove({ _id: req.params.id }, function (err, num) {
+  db.posts.remove({ _id: req.params.id }, function (err, num) {
 
-		if (err) {
-			res.send(err);
-			return;
-		}
+    if (err) {
+      res.send(err);
+      return;
+    }
 
-		res.send(200, { "message": "Removed " + num + " post(s)" });
-		// res.send(204);
+    res.send(200, { "message": "Removed " + num + " post(s)" });
+    // res.send(204);
 
-	});
+  });
 
 });
 
