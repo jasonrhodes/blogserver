@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <% var pageTitle = pageTitle || "Site Title" %>
+  <title><%= pageTitle %></title>
+  <% _.each(stylesheets, function (href, i) { %>
+    <link rel="stylesheet" href="<%= href %>" />
+  <% }) %>
+
+</head>
+<body>
+
+  <div id="<%= containerId %>" class="<%= containerClasses.join(' ') %>"></div>
+
+  <% _.each(scripts, function (src, i) { %>
+    <script src="<%= src %>"></script>
+  <% }) %>
+
+</body>
+</html>

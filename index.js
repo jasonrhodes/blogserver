@@ -1,137 +1,65 @@
 var express = require("express")
   , app = express()
-  , Datastore = require("nedb")
-  ;
+  , fs = require("fs")
+  , path = require("path")
+  , cons = require("consolidate")
+  , port = process.argv[2] || 5000
+  , routes = {}
 
-var port = process.argv[2] || 5000;
+// assign the underscore engine to .html files
+app.engine('html', cons.underscore);
 
-var db = {
-  posts: new Datastore({
-      filename: "./blogdb"
-    , autoload: true
-  })
-};
+// set .html as the default extension 
+app.set('view engine', 'html');
+app.set('views', path.join(__dirname, 'views'));
 
-function upsertPost(post, callback) {
+app.use(express.json());
 
-  if (!post._id && !post.publishDate) {
-    post.publishDate = new Date();
-  }
-  
-  db.posts.update({ _id: post._id }, post, { upsert: true }, callback);
+routes.admin = require("./routes/admin")
+routes.posts = require("./routes/posts")
+routes.talks = require("./routes/talks")
 
-}
+/**
+ * Admin UI
+ * 
+ */
 
-app.use(express.bodyParser());
+// Serve the admin assets as static files
+app.use("/admin/assets", express.static(path.join(__dirname, "/admin/assets")));
 
-app.use(function (req, res, next) {
+// Divert anything else that matches /admin* to the index.html page (a la mod_rewrite)
+app.get("/admin/:path?*", routes.admin.index);
+
+/**
+ * Content API
+ * 
+ */
+
+
+app.use("/api", function (req, res, next) {
   res.type("application/json");
   next();
 });
 
+// Posts
+app.get("/api/posts", routes.posts.list);
+app.post("/api/posts", routes.posts.create);
+app.get("/api/posts/:id", routes.posts.single);
+app.put("/api/posts/:id", routes.posts.update);
+app.delete("/api/posts/:id", routes.posts.delete);
+
+// Talks
+app.get("/api/talks", routes.talks.list);
+app.post("/api/talks", routes.talks.create);
+app.get("/api/talks/:id", routes.talks.single);
+app.put("/api/talks/:id", routes.talks.update);
+app.delete("/api/talks/:id", routes.talks.delete);
+
 /**
- * Get a list of posts
+ * Start application
  * 
  */
-app.get("/posts", function (req, res) {
-
-  var page = req.params.page || 1;
-  var perPage = req.params.per_page || 20;
-  var skip = (page - 1) * perPage;
-
-  db.posts.find({}).skip(skip).limit(perPage).exec(function (err, posts) {
-
-    if (err) {
-      res.send(err);
-      return;
-    }
-    
-    res.send(200, posts);
-
-  });
-
-});
-
-/**
- * Create a new post
- *
- */
-app.post("/posts", function (req, res) {
-
-  upsertPost(req.body, function (err, num, post) {
-
-    if (err) {
-      res.send(err);
-      return;
-    }
-
-    res.send(201, post);
-  
-  });
-
-});
-
-/**
- * Get a single post
- * 
- */
-app.get("/posts/:id", function (req, res) {
-
-  db.posts.find({ _id: req.params.id }, function (err, post) {
-
-    if (err) {
-      res.send(err);
-      return;
-    }
-
-    res.send(200, post);
-
-  });
-
-});
-
-/**
- * Edit a single post
- * 
- */
-app.put("/posts/:id", function (req, res) {
-
-  req.body._id = req.params.id;
-
-  upsertPost(req.body, function (err, num) {
-
-    if (err) {
-      res.send(err);
-      return;
-    }
-
-    res.send(200, { "message": "Updated " + num + " post(s)" });
-  
-  });
-
-});
-
-/**
- * Delete a single post
- * 
- */
-app.delete("/posts/:id", function (req, res) {
-
-  db.posts.remove({ _id: req.params.id }, function (err, num) {
-
-    if (err) {
-      res.send(err);
-      return;
-    }
-
-    res.send(200, { "message": "Removed " + num + " post(s)" });
-    // res.send(204);
-
-  });
-
-});
-
 
 app.listen(port);
 
-console.log("\nblogserver listening on port " + port + "...");
+console.log("\nBlogamatic listening on port " + port + "...");

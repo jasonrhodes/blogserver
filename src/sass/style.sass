@@ -1,0 +1,76 @@
+@import bourbon/bourbon
+@import bitters/bitters
+@import font-awesome/font-awesome
+
+$ffsans: "Open Sans", helvetica, sans-serif
+
+*, *:before, *:after
+  box-sizing: border-box
+
+body
+  font-family: $ffsans
+
+h1, h2
+  font-family: "Roboto Slab"
+
+h3, h4, h5, h6
+  font-family: $ffsans
+  font-size: 1em
+
+a
+  color: #333
+  text-decoration: none
+
+.container
+  width: 100%
+  padding: 30px
+  margin: 0 auto
+  overflow: hidden
+
+div.entry-list
+  width: 50%
+  padding: 20px
+  float: left
+
+  &.post-list
+    padding-left: 0
+
+  &.talk-list
+    padding-right: 0
+
+.entry-teaser
+  margin-bottom: 30px
+
+  h3
+    font-weight: bold
+    margin-bottom: 8px
+
+    i
+      font-size: 0.7em
+      position: relative
+      top: -2px
+      padding-right: 8px
+
+  .button-set
+    padding-left: 24px
+
+  button
+
+    &.delete
+      +button(simple, #ba4545)
+      
+    &.edit
+      +button(simple)
+
+form
+  padding: 30px 0
+
+  input, textarea, label
+    font-family: $ffsans !important
+
+  textarea
+    height: 200px
+
+.entry-form
+  width: 50%
+  padding-right: 30px
