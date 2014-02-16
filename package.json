@@ -22,6 +22,8 @@
     "gulp-ruby-sass": "~0.3.0",
     "gulp-jshint": "~1.4.0",
     "gulp-util": "~2.2.14",
-    "node-underscorify": "0.0.3"
+    "node-underscorify": "0.0.3",
+    "request": "~2.33.0",
+    "async": "~0.2.10"
   }
 }

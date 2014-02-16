@@ -24,11 +24,16 @@ routes.talks = require("./routes/talks")
  * 
  */
 
+// Serve the exported site as static files (for now, maybe move to another repo)
+app.use("/site", express.static(path.join(__dirname, "/site")));
+
 // Serve the admin assets as static files
 app.use("/admin/assets", express.static(path.join(__dirname, "/admin/assets")));
 
 // Divert anything else that matches /admin* to the index.html page (a la mod_rewrite)
 app.get("/admin/:path?*", routes.admin.index);
+
+
 
 /**
  * Content API

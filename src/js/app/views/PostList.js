@@ -29,7 +29,7 @@ module.exports = Views.EntryList.extend({
   render: function () {
 
     this.$el.html("");
-    this.$el.append($("<button>").addClass("add").text("Add Post"));
+    this.$el.append($("<h2>").text("Posts").append($("<button>").addClass("add").text("Add Post")));
 
     this.collection.each(function (post, i) {
 

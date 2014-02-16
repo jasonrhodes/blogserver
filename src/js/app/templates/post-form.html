@@ -3,13 +3,13 @@
 <form id="postForm">
 
   <label>Title</label>
-  <input type="text" name="title" value="<%= title %>" />
+  <input type="text" name="title" value="<%= entry.title %>" />
 
   <label>Content</label>
-  <textarea name="content"><%= content %></textarea>
+  <textarea name="content"><%= entry.content %></textarea>
 
   <label>Publish Date</label>
-  <input type="text" name="publishDate" value="<%= publishDate %>" />
+  <input type="text" name="publishDate" value="<%= entry.publishDate %>" />
 
   <button type="submit">Save</button>
   <button type="cancel">Cancel</button>
