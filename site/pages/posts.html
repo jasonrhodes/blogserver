@@ -1,0 +1,6 @@
+<h3>Posts</h3>
+<% _.each(posts, function (post, i) { %>
+<div class="post">
+<h3><a href="<%= post.permalink %>"><%= post.title %></a></h3>
+</div>
+<% }) %>

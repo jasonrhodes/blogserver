@@ -25,7 +25,7 @@ routes.talks = require("./routes/talks")
  */
 
 // Serve the exported site as static files (for now, maybe move to another repo)
-app.use("/site", express.static(path.join(__dirname, "/site")));
+app.use(express.static(path.join(__dirname, "/export")));
 
 // Serve the admin assets as static files
 app.use("/admin/assets", express.static(path.join(__dirname, "/admin/assets")));

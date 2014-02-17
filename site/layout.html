@@ -1,11 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Testo Presto</title>
+  <% var title = [title, site.title].join(" | ").replace(/^\s\|\s/, "") %>
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/assets/style.css" />
 </head>
 <body>
+<div class="header">
+  <ul class="nav">
+    <li><a href="/">Home</a></li>
+    <li><a href="/about.html">About</a></li>
+  </ul>
+</div>
 
 <%= content %>
 
+<script type="text/javascript" src="/assets/main.js"></script>
 </body>
 </html>

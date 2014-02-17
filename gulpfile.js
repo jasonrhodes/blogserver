@@ -4,28 +4,42 @@ var gulp = require("gulp")
   , sass = require("gulp-ruby-sass")
   , jshint = require("gulp-jshint")
   , notify = require("gulp-notify")
+  , path = require("path")
   , $$ = {}
-  ;
 
-// Set up some constants for config
+// Change context between admin and site
+if (!gutil.env.context) {
+  throw new Error("Bzzzt must include context");
+}
+process.chdir(path.join(process.cwd(), "src", gutil.env.context));
+gutil.log("Working directory changed to " + gutil.colors.magenta(process.cwd()));
+
+var buildDirs = {
+  "admin": "admin",
+  "site": "export"
+};
+
+// Set up globs
 $$ = {
   scripts: {
-    all: 'src/js/**/*.js',
-    lint: ['src/js/**/*.js', '!src/js/vendor/**/*.js'],
-    watch: ['src/js/**/*.js', 'src/js/app/templates/**/*.html', '!src/js/vendor/**/*.js'],
-    build: ['src/js/main.js']
+    all: './**/*.js',
+    lint: ['./js/**/*.js', '!./js/vendor/**/*.js'],
+    watch: ['./js/**/*.js', './js/app/templates/**/*.html', '!./js/vendor/**/*.js'],
+    build: ['./js/main.js']
   },
   styles: {
-    all: ['src/sass/**/*.sass', 'src/sass/**/*.scss', 'src/sass/**/*.css'],
-    build: ['src/sass/style.*']
-  },
-  buildDir: {
-    root: "./admin/assets"
+    all: ['./sass/**/*.sass', './sass/**/*.scss', './sass/**/*.css'],
+    build: ['./sass/style.*']
   }
 };
 
-$$.buildDir.js = $$.buildDir.root; // + "/js";
-$$.buildDir.css = $$.buildDir.root; // + "/css";
+$$.buildDir = path.join("..", "..", buildDirs[gutil.env.context], "assets");
+
+
+/**
+ * TASK DEFINITIONS
+ * 
+ */
 
 gulp.task("scripts", ["jshint"], function () {
 
@@ -34,7 +48,7 @@ gulp.task("scripts", ["jshint"], function () {
       debug: true,
       transform: ["node-underscorify"]
     }))
-    .pipe(gulp.dest($$.buildDir.js));
+    .pipe(gulp.dest($$.buildDir));
 
 });
 
@@ -49,7 +63,7 @@ gulp.task("styles", function () {
 
   return gulp.src($$.styles.build)
     .pipe(sass())
-    .pipe(gulp.dest($$.buildDir.css));
+    .pipe(gulp.dest($$.buildDir));
 
 });
 

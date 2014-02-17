@@ -1,0 +1,22 @@
+<h1>Edit/Create Talk or Tutorial</h1>
+
+<form id="talkForm">
+
+  <label>Title</label>
+  <input type="text" name="title" value="<%= entry.title %>" />
+
+  <div class="mini slug">
+  <label>Slug</label>
+  <input type="text" name="slug" value="<%= entry.slug %>" />
+  </div>
+  
+  <label>Content</label>
+  <textarea name="content"><%= entry.content %></textarea>
+
+  <label>Publish Date</label>
+  <input type="text" name="publishDate" value="<%= entry.publishDate %>" />
+
+  <button type="submit">Save</button>
+  <button type="cancel">Cancel</button>
+
+</form>

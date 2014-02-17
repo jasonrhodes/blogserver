@@ -1,0 +1,13 @@
+<h3>Posts</h3>
+<% _.each(posts, function (post, i) { %>
+<div class="post">
+<h3><a href="<%= post.permalink %>"><%= post.title %></a></h3>
+</div>
+<% }) %>
+
+<h3>Talks and Tutorials</h3>
+<% _.each(talks, function (talk, i) { %>
+<div class="talk">
+<h3><a href="<%= talk.permalink %>"><%= talk.title %></a></h3>
+</div>
+<% }) %>
